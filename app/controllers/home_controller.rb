@@ -3,6 +3,7 @@ class HomeController < ApplicationController
 	require 'json'
 
 def index
+	@attributes=["name","price","block","nextretarget","blocksleft","measured","difficulty","estdifficulty","timeretarget"]
 	@data={}
 	@data["btc"]=generateBTCData(2016)
 	@data["ltc"]=generateMapData("ltc","http://litecoinscout.com/chain/litecoin/q",150,2016)
@@ -11,6 +12,7 @@ end
 
 def generateMapData(name, url, blocktime, cycle)
 	map={}
+	map["name"]=name
 	map["price"] = JSON.parse(open("https://btc-e.com/api/2/"+name+"_btc/ticker").read)["ticker"]["last"]
 	map["block"] = open(url+"/getblockcount").read.to_i
 
@@ -34,6 +36,7 @@ end
 
 def generateBTCData(cycle)
 	map={}
+	map["name"]="btc"
 	map["price"] = 1
 	map["block"] = open("http://blockexplorer.com/q/getblockcount").read.to_i
 	map["nextretarget"] = open("http://blockexplorer.com/q/nextretarget").read.to_i
