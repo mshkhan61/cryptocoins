@@ -5,12 +5,13 @@
 <%=att%>
 </th>
 <%end%>
+
 </tr>
-	<%@data.each do |coin| %>
+	<%@data.each do |key, value| %>
 <tr>
-	<%@attributes.each do |key|%>
+	<%@attributes.each do |att|%>
 <td>
-<%=coin[key]%>
+<%=value[att]%>
 </td>
 <%end%>
 		</tr>
