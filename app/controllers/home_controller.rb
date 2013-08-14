@@ -1,25 +1,36 @@
 class HomeController < ApplicationController
-  def index
-  	#!/usr/bin/python
+	require 'open-uri'
 
-import urllib2
-import json
+def index
+	data={}
+	map={}
+	cycle=2016
+	map["price"] = 1
+	map["block"] = open("http://blockexplorer.com/q/getblockcount").read.to_i
+	map["nextretarget"] = open("http://blockexplorer.com/q/nextretarget").read.to_i
+	map["blocksleft"]=map["nextretarget"]-map["block"]
+	map["measured"]=(cycle-map["blocksleft"])/float(cycle)
+	map["difficulty"]=open("http://blockexplorer.com/q/getdifficulty").read.to_i
+	map["estdifficulty"]=open("http://blockexplorer.com/q/estimate").read.to_i
+	map["timeretarget"]=open("http://blockexplorer.com/q/eta").read.to_i
+	data["btc"]=map
 
-data={}
+	generateMapData("ltc","http://litecoinscout.com/chain/litecoin/q",150,2016)
+	generateMapData("ftc","http://explorer.feathercoin.com/chain/Feathercoin/q",150,504)
+end
 
 def generateMapData(name, url, blocktime, cycle):
 	map={}
-	map["price"] = json.loads(urllib2.urlopen("https://btc-e.com/api/2/"+name+"_btc/ticker").read())["ticker"]["last"]
-	map["block"] = int(urllib2.urlopen(url+"/getblockcount").read())
+	map["price"] = JSON.parse(open("https://btc-e.com/api/2/"+name+"_btc/ticker").read["ticker"]["last"]
+	map["block"] = open(url+"/getblockcount").read.to_i
 
-	nethash=urllib2.urlopen(url+"/nethash/500/-500").read().split("START DATA")[1]
-	nethash=nethash.split(",")
-	hashesperblock=int(nethash[5])
-	nethashrate=int(nethash[7])
+	nethash=open(url+"/nethash/500/-500").read.split("START DATA")[1].split(",")
+	hashesperblock=nethash[5].to_i
+	nethashrate=nethash[7].to_i
 	fullcycletime=blocktime*cycle
 	lastretarget = (map["block"]/cycle)*cycle
 	cycleblocks=map["block"]-lastretarget
-	lastcycletime=int(urllib2.urlopen(url+"/nethash/1/"+str(cycleblocks*-1)+"/"+str(cycleblocks*-1+1)).read().split("START DATA")[1].split(",")[1])
+	lastcycletime=open(url+"/nethash/1/"+str(cycleblocks*-1)+"/"+str(cycleblocks*-1+1)).read.split("START DATA")[1].split(",")[1]).to_i
 	currcycletime=int(nethash[1])-lastcycletime
 
 	map["nextretarget"] = lastretarget+cycle
@@ -29,27 +40,4 @@ def generateMapData(name, url, blocktime, cycle):
 	map["estdifficulty"]=fullcycletime/(currcycletime/map["measured"])*map["difficulty"]
 	map["timeretarget"]=map["blocksleft"]*hashesperblock/nethashrate
 	data[name]=map
-
-map={}
-cycle=2016
-map["price"] = 1
-map["block"] = int(urllib2.urlopen("http://blockexplorer.com/q/getblockcount").read())
-map["nextretarget"] = int(urllib2.urlopen("http://blockexplorer.com/q/nextretarget").read())
-map["blocksleft"]=map["nextretarget"]-map["block"]
-map["measured"]=(cycle-map["blocksleft"])/float(cycle)
-map["difficulty"]=urllib2.urlopen("http://blockexplorer.com/q/getdifficulty").read()
-map["estdifficulty"]=urllib2.urlopen("http://blockexplorer.com/q/estimate").read()
-map["timeretarget"]=urllib2.urlopen("http://blockexplorer.com/q/eta").read()
-data["btc"]=map
-
-generateMapData("ltc","http://litecoinscout.com/chain/litecoin/q",150,2016)
-generateMapData("ftc","http://explorer.feathercoin.com/chain/Feathercoin/q",150,504)
-
-for key,value in data.items():
-	print key
-	for k2, v2 in value.items():
-		print k2, ":",v2 
-
-
-  end
 end
