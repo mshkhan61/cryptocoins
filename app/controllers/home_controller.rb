@@ -19,9 +19,9 @@ def index
 	generateMapData("ftc","http://explorer.feathercoin.com/chain/Feathercoin/q",150,504)
 end
 
-def generateMapData(name, url, blocktime, cycle):
+def generateMapData(name, url, blocktime, cycle)
 	map={}
-	map["price"] = JSON.parse(open("https://btc-e.com/api/2/"+name+"_btc/ticker").read["ticker"]["last"]
+	map["price"] = JSON.parse(open("https://btc-e.com/api/2/"+name+"_btc/ticker").read)["ticker"]["last"]
 	map["block"] = open(url+"/getblockcount").read.to_i
 
 	nethash=open(url+"/nethash/500/-500").read.split("START DATA")[1].split(",")
@@ -40,4 +40,6 @@ def generateMapData(name, url, blocktime, cycle):
 	map["estdifficulty"]=fullcycletime/(currcycletime/map["measured"])*map["difficulty"]
 	map["timeretarget"]=map["blocksleft"]*hashesperblock/nethashrate
 	data[name]=map
+end
+
 end
