@@ -30,7 +30,7 @@ def generateMapData(name, url, blocktime, cycle):
 	fullcycletime=blocktime*cycle
 	lastretarget = (map["block"]/cycle)*cycle
 	cycleblocks=map["block"]-lastretarget
-	lastcycletime=open(url+"/nethash/1/"+str(cycleblocks*-1)+"/"+str(cycleblocks*-1+1)).read.split("START DATA")[1].split(",")[1]).to_i
+	lastcycletime=open(url+"/nethash/1/"+str(cycleblocks*-1)+"/"+str(cycleblocks*-1+1)).read.split("START DATA")[1].split(",")[1].to_i
 	currcycletime=int(nethash[1])-lastcycletime
 
 	map["nextretarget"] = lastretarget+cycle
