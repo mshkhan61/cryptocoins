@@ -2,6 +2,8 @@ class HomeController < ApplicationController
 	require 'open-uri'
 	require 'json'
 #TODO bootstrap formatting
+#TODO cache data
+#TODO format output
 
 def index
 	#get new data
