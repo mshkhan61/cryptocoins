@@ -10,7 +10,7 @@ def index
 	File.open(target, "w") {}
 	end
 
-	if File.ctime(target)-File.ctime>=60
+	if Time.now-File.ctime(target)>=10
 	#get new data, save to file
 		@attributes=["name","price","block","nextretarget","blocksleft","measured","difficulty","estdifficulty","timeretarget"]
 		@data={}
