@@ -1,13 +1,30 @@
 class HomeController < ApplicationController
 	require 'open-uri'
 	require 'json'
+#TODO bootstrap formatting
 
 def index
-	@attributes=["name","price","block","nextretarget","blocksleft","measured","difficulty","estdifficulty","timeretarget"]
-	@data={}
-	@data["btc"]=generateBTCData(2016)
-	@data["ltc"]=generateMapData("ltc","http://litecoinscout.com/chain/litecoin/q",150,2016)
-	@data["ftc"]=generateMapData("ftc","http://explorer.feathercoin.com/chain/Feathercoin/q",150,504)
+	target="cache.txt"
+
+	unless File.exist?(target)
+	File.open(target, "w") {}
+	end
+
+	if File.ctime(target)-File.ctime>=60
+	#get new data, save to file
+		@attributes=["name","price","block","nextretarget","blocksleft","measured","difficulty","estdifficulty","timeretarget"]
+		@data={}
+		@data["btc"]=generateBTCData(2016)
+		@data["ltc"]=generateMapData("ltc","http://litecoinscout.com/chain/litecoin/q",150,2016)
+		@data["ftc"]=generateMapData("ftc","http://explorer.feathercoin.com/chain/Feathercoin/q",150,504)
+
+	File.open(target, "w+") do |f|
+	  f.write(@data.to_json)
+	end
+	else
+	#read data from file
+	@data=JSON.parse(File.read(target))
+	end
 end
 
 def generateMapData(name, url, blocktime, cycle)
